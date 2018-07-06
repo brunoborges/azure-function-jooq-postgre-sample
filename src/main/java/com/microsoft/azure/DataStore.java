@@ -42,14 +42,13 @@ public class DataStore {
     }
 
     public void save(String name) {
-        connectAndRun((jooq) -> Optional.of(jooq.insertInto(table("greeted"), field("name")).values(name).execute()));
+        connectAndRun(jooq -> Optional.of(jooq.insertInto(table("greeted"), field("name")).values(name).execute()));
     }
 
     public List<String> greetedPeople() {
         return this
-                .<List<String>>connectAndRun((jooq) -> Optional.ofNullable(
-                        jooq.select().from(table("greeted")).fetch().getValues(field("name", String.class))))
-                .orElse(Collections.emptyList());
+                .<List<String>>connectAndRun(jooq -> Optional.of(
+                        jooq.select().from(table("greeted")).fetch().getValues(field("name", String.class)))).get();
     }
 
 }
